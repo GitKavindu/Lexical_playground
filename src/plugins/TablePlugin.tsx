@@ -38,9 +38,13 @@ export function InsertTableDialog({
   }, [rows, columns]);
 
   const onClick = () => {
-    activeEditor.dispatchCommand(INSERT_TABLE_COMMAND, {
-      columns,
-      rows,
+    activeEditor.dispatchCommand(INSERT_TABLE_COMMAND,  {
+      rows: rows,
+      columns: columns,
+      includeHeaders: {
+        rows: true,
+        columns: false,
+      },
     });
 
     onClose();
