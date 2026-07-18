@@ -8,6 +8,7 @@
  */
 :root {
   --lexical-indent-base-value: 40px;
+  --editor-font-color: #000000;
 }
 .PlaygroundEditorTheme__paragraph {
   margin: 0;
@@ -468,17 +469,35 @@
   list-style-position: outside;
 }
 .PlaygroundEditorTheme__listItem {
+  list-style: none;
+  position: relative;
   margin: 0 32px;
-  font-family: var(--listitem-marker-font-family);
-  font-size: var(--listitem-marker-font-size);
-  background-color: var(--listitem-marker-background-color);
+  padding-left: 20px;
 }
-.PlaygroundEditorTheme__listItem::marker {
-  color: var(--listitem-marker-color);
-  background-color: var(--listitem-marker-background-color);
-  font-family: var(--listitem-marker-font-family);
-  font-size: var(--listitem-marker-font-size);
+
+.PlaygroundEditorTheme__listItem::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.9em;
+  transform: translateY(-50%);
+
+  width: 12px;
+  height: 12px;
+
+  background-color:var(--editor-font-color);
+
+  -webkit-mask: url("/x-diamond-fill.svg") no-repeat center;
+  -webkit-mask-size: contain;
+
+  mask: url("../../public/x-diamond-fill.svg") no-repeat center;
+  mask-size: contain;
 }
+/*
+[data-lexical-text] {
+  color: #2563eb;
+}*/
+
 .PlaygroundEditorTheme__listItemChecked,
 .PlaygroundEditorTheme__listItemUnchecked {
   position: relative;

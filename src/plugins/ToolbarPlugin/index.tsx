@@ -867,7 +867,12 @@ export default function ToolbarPlugin({
 
   const onFontColorSelect = useCallback(
     (value: string, skipHistoryStack: boolean, skipRefocus: boolean) => {
-      applyStyleText({color: value}, skipHistoryStack, skipRefocus);
+        console.log("Selected color:", value);
+        document.documentElement.style.setProperty(
+        "--editor-font-color",
+        value
+      );
+        applyStyleText({color: value}, skipHistoryStack, skipRefocus);
     },
     [applyStyleText],
   );
