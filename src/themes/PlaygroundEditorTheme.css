@@ -468,20 +468,29 @@
   margin: 0;
   list-style-position: outside;
 }
-ul.PlaygroundEditorTheme__listItem {
+
+ol > .PlaygroundEditorTheme__listItem {
+  list-style: decimal;
+  margin: 0 32px;
+  font-family: var(--listitem-marker-font-family);
+  font-size: var(--listitem-marker-font-size);
+  background-color: var(--listitem-marker-background-color);
+}
+
+ul > .PlaygroundEditorTheme__listItem {
   list-style: none;
   position: relative;
   margin: 0 32px;
   padding-left: 20px;
 }
 
-ul.PlaygroundEditorTheme__listItem > [data-lexical-text] {
+ul > .PlaygroundEditorTheme__listItem > [data-lexical-text] {
   position: relative;
   display: inline-block;
   padding-left: 24px;
 }
 
-ul.PlaygroundEditorTheme__listItem > [data-lexical-text]::before {
+ul > .PlaygroundEditorTheme__listItem > [data-lexical-text]::before {
   content: "";
   position: absolute;
   left: 0;
