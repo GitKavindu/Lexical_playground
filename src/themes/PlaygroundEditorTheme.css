@@ -468,29 +468,35 @@
   margin: 0;
   list-style-position: outside;
 }
-.PlaygroundEditorTheme__listItem {
+ul.PlaygroundEditorTheme__listItem {
   list-style: none;
   position: relative;
   margin: 0 32px;
   padding-left: 20px;
 }
 
-.PlaygroundEditorTheme__listItem::before {
+ul.PlaygroundEditorTheme__listItem > [data-lexical-text] {
+  position: relative;
+  display: inline-block;
+  padding-left: 24px;
+}
+
+ul.PlaygroundEditorTheme__listItem > [data-lexical-text]::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 0.9em;
+  top: 50%;
   transform: translateY(-50%);
 
   width: 12px;
   height: 12px;
 
-  background-color:var(--editor-font-color);
+  background-color: currentColor;
 
   -webkit-mask: url("/x-diamond-fill.svg") no-repeat center;
   -webkit-mask-size: contain;
 
-  mask: url("../../public/x-diamond-fill.svg") no-repeat center;
+  mask: url("/x-diamond-fill.svg") no-repeat center;
   mask-size: contain;
 }
 /*
