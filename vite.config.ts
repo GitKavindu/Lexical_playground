@@ -14,7 +14,7 @@ import transformErrorMessages from './scripts/vite/viteModuleResolution';
 import viteMonorepoResolutionPlugin from './scripts/vite/lexicalMonorepoPlugin';
 import viteCopyEsm from './viteCopyEsm';
 import viteCopyExcalidrawAssets from './viteCopyExcalidrawAssets';
-
+import dts from 'vite-plugin-dts';
 // react() returns Plugin[]; widening it to PluginOption[] here lets the plugins
 // array below infer as PluginOption[] (every other entry is a Plugin, which is
 // a PluginOption) without annotating the whole array. That matters because
@@ -25,54 +25,134 @@ const reactPlugins: PluginOption[] = react();
 
 // https://vitejs.dev/config/
 export default defineConfig(
-  ({mode}): UserConfig => ({
-    build: {
-      outDir: 'build',
-      rollupOptions: {
-        input: {
-          main: new URL('./index.html', import.meta.url).pathname,
-          split: new URL('./split/index.html', import.meta.url).pathname,
-        },
-      },
-      target: 'es2022',
-      ...(mode === 'production'
-        ? {
-            minify: 'terser',
-            terserOptions: {
-              compress: {
-                toplevel: true,
-              },
-              keep_classnames: true,
-            },
-          }
-        : {minify: false}),
+({mode}): UserConfig => ({
+
+  build: {
+
+    // Library output folder
+    outDir: 'dist',
+
+    target: 'es2022',
+
+    lib: {
+
+      // NEW library entry
+      entry: './src/index.ts',
+
+      name: 'LexicalEditor',
+
+      fileName: 'lexical-editor',
+
+      formats: [
+        'es'
+      ],
     },
-    plugins: [
-      viteMonorepoResolutionPlugin(),
-      babel({
-        babelHelpers: 'bundled',
-        babelrc: false,
-        configFile: false,
-        exclude: '**/node_modules/**',
-        extensions: ['jsx', 'js', 'ts', 'tsx', 'mjs'],
-        plugins: [
-          '@babel/plugin-transform-flow-strip-types',
-          ...(mode !== 'production'
-            ? [
-                [
-                  transformErrorMessages,
-                  {
-                    noMinify: true,
-                  },
-                ],
-              ]
-            : []),
+
+
+    rollupOptions: {
+
+      // Do not bundle these
+      external: [
+        'react',
+        'react-dom',
+
+        'lexical',
+        '@lexical/react',
+
+        '@lexical/utils',
+        '@lexical/html',
+        '@lexical/list',
+        '@lexical/table',
+        '@lexical/link',
+        '@lexical/history',
+        '@lexical/rich-text',
+      ],
+
+    },
+
+
+    ...(mode === 'production'
+      ? {
+          minify: 'terser',
+
+          terserOptions: {
+             keep_classnames: true,
+          },
+        }
+      : {
+          minify: false,
+        }),
+  },
+
+
+  plugins: [
+
+    // TypeScript declarations
+    dts({
+      insertTypesEntry: true,
+    }),
+
+
+    viteMonorepoResolutionPlugin(),
+
+
+    babel({
+
+      babelHelpers: 'bundled',
+
+      babelrc: false,
+
+      configFile: false,
+
+      exclude: '**/node_modules/**',
+
+      extensions: [
+        'jsx',
+        'js',
+        'ts',
+        'tsx',
+        'mjs',
+      ],
+
+
+      plugins: [
+
+        '@babel/plugin-transform-flow-strip-types',
+
+        ...(mode !== 'production'
+          ? [
+              [
+                transformErrorMessages,
+                {
+                  noMinify: true,
+                },
+              ],
+            ]
+          : []),
+
+      ],
+
+
+      presets: [
+        [
+          '@babel/preset-react',
+          {
+            runtime: 'automatic',
+          },
         ],
-        presets: [['@babel/preset-react', {runtime: 'automatic'}]],
-      }),
-      ...reactPlugins,
-      ...viteCopyExcalidrawAssets(),
-      viteCopyEsm(),
-    ],
-  }),
-);
+      ],
+
+    }),
+
+
+    ...reactPlugins,
+
+
+    // Keep only if your editor needs these assets
+    ...viteCopyExcalidrawAssets(),
+
+    viteCopyEsm(),
+
+  ],
+
+}));
